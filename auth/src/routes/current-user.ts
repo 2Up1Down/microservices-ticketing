@@ -1,9 +1,21 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
 router.get('/api/users/currentuser', (req, res) => {
-  res.send('hi current user!!!!');
+  if (!req.session?.jwt) {
+    return res.send({ currentUser: null });
+  }
+
+  try {
+    // JWT_KEY will be checked on startup in index.ts file
+    const payload = jwt.verify(req.session.jwt, process.env.JWT_KEY!);
+    res.send({ currentUser: payload });
+  } catch (error) {
+    console.log('verification failed');
+    return res.send({ currentUser: null });
+  }
 });
 
 export { router as currentUserRouter };
