@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 
-import { validateRequest } from '../middlewares/validate-request';
-import { User } from '../models/user';
-import { RequestValidationError } from '../errors/request-validation-error';
 import { BadRequestError } from '../errors/bad-request-error';
+import { RequestValidationError } from '../errors/request-validation-error';
+import { User } from '../models/user';
+import { validateRequest } from '../middlewares/validate-request';
 
 const router = express.Router();
 
@@ -23,7 +23,6 @@ router.post(
     const { email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
-
     if (existingUser) {
       throw new BadRequestError('Email in use');
     }
@@ -33,7 +32,7 @@ router.post(
 
     const user = User.build({ email, password: hashedPassword });
     await user.save();
-    console.log(process.env.JWT_KEY);
+
     // Generate JWT
     const userJwt = jwt.sign(
       {
@@ -46,7 +45,7 @@ router.post(
     // Store it on session object
     req.session = { jwt: userJwt };
 
-    res.status(201).send(user);
+    res.status(200).send(user);
   }
 );
 
