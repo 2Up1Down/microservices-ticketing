@@ -1,7 +1,10 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import { DatabaseConnectionError } from '../errors/database-connection-error';
+import jwt from 'jsonwebtoken';
+
+import { User } from '../models/user';
 import { RequestValidationError } from '../errors/request-validation-error';
+import { BadRequestError } from '../errors/bad-request-error';
 
 const router = express.Router();
 
@@ -23,10 +26,31 @@ router.post(
 
     const { email, password } = req.body;
 
-    console.log('Creating a user...');
-    throw new DatabaseConnectionError();
+    const existingUser = await User.findOne({ email });
 
-    res.send({});
+    if (existingUser) {
+      throw new BadRequestError('Email in use');
+    }
+
+    // Hash password here
+    const hashedPassword = password;
+
+    const user = User.build({ email, password: hashedPassword });
+    await user.save();
+    console.log(process.env.JWT_KEY);
+    // Generate JWT
+    const userJwt = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      `${process.env.JWt_KEY!}`
+    );
+
+    // Store it on session object
+    req.session = { jwt: userJwt };
+
+    res.status(201).send(user);
   }
 );
 
