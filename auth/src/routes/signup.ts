@@ -39,7 +39,8 @@ router.post(
         id: user.id,
         email: user.email,
       },
-      `${process.env.JWt_KEY!}`
+      // `${process.env.JWt_KEY!}` // this implementation caused an unwanted behaviour
+      process.env.JWT_KEY!
     );
 
     // Store it on session object
