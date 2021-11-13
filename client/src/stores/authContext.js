@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import axios from "axios";
 import useSWR from "swr";
 
@@ -15,9 +15,9 @@ const AuthContextProvider = ({ children }) => {
   const { data, error } = useSWR("/api/users/currentuser", fetcher);
 
   const context = {
-    user: data,
     isLoading: !error && !data,
     isError: error,
+    ...data,
   };
   console.log("SWR Log", data);
 
@@ -26,5 +26,7 @@ const AuthContextProvider = ({ children }) => {
   );
 };
 
+const useAuth = () => useContext(AuthContext);
+
 export default AuthContext;
-export { AuthContextProvider };
+export { AuthContextProvider, useAuth };
