@@ -1,11 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-import { useAuth } from "../stores/authContext";
-
 function Header() {
-  const { user, isLoading, isError } = useAuth();
-
   const links = [
     { label: "Sign Up", href: "/auth/signup" },
     { label: "Sign In", href: "/auth/signin" },
@@ -24,11 +20,13 @@ function Header() {
 
   return (
     <nav className="navbar navbar-light bg-light">
-      <Link href="/">
-        <a className="navbar-brand">GitTix</a>
-      </Link>
-      <div className="d-flex justify-content-end">
-        <ul className="nav d-flex align-items-center">{links}</ul>
+      <div className="container">
+        <Link href="/">
+          <a className="navbar-brand">GitTix</a>
+        </Link>
+        <div className="d-flex justify-content-end">
+          <ul className="nav d-flex align-items-center">{links}</ul>
+        </div>
       </div>
     </nav>
   );
