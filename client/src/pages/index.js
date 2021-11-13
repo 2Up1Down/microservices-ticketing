@@ -1,35 +1,24 @@
-import axios from 'axios';
+import getCurrentUser from "../lib/auth";
+import BaseLayout from "../components/common/base-layout";
 
-const LandingPage = ({currentUser}) => {
-    console.log('current user: ', currentUser);
+const LandingPage = ({ currentUser }) => {
+  console.log("current user: ", currentUser);
 
-    return <h1>hello world</h1>;
+  return (
+    <BaseLayout>
+      <h1>Landing Page</h1>
+      {currentUser ? "You are signed in" : "You are NOT signed in"}
+      <p>some ftext</p>
+    </BaseLayout>
+  );
 };
 
-export async function getServerSideProps({req}) {
+export async function getServerSideProps({ req }) {
+  const currentUser = await getCurrentUser(req.headers);
 
-
-    let res = {};
-    try {
-        res = await axios.get(
-            'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser',
-            {
-                withCredentials: true,
-                headers: req.headers,
-            }
-        );
-
-    } catch (error) {
-        return {
-            props: {currentUser: 'null'},
-        };
-    }
-
-    return {
-        props: res.data,
-    };
+  return {
+    props: currentUser,
+  };
 }
 
 export default LandingPage;
-
-

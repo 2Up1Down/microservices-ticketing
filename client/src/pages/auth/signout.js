@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Router from "next/router";
 
 import useRequest from "../../hooks/use-request";
+import BaseLayout from "../../components/common/base-layout";
 
 const Signout = () => {
   const { doRequest } = useRequest({
@@ -14,7 +15,7 @@ const Signout = () => {
   useEffect(() => {
     doRequest();
   }, []);
-  return <div>Signing you out...</div>;
+  return <BaseLayout>Signing you out...</BaseLayout>;
 };
 
 export default Signout;
