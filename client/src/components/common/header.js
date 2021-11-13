@@ -1,18 +1,18 @@
 import React from "react";
 import Link from "next/link";
 
-function Header() {
+const Header = ({ user }) => {
   const links = [
-    { label: "Sign Up", href: "/auth/signup" },
-    { label: "Sign In", href: "/auth/signin" },
-    { label: "Sign Out", href: "/auth/signout" },
+    !user && { label: "Sign Up", href: "/auth/signup" },
+    !user && { label: "Sign In", href: "/auth/signin" },
+    user && { label: "Sign Out", href: "/auth/signout" },
   ]
     .filter((linkConfig) => linkConfig)
     .map(({ label, href }) => {
       return (
-        <li key={href}>
+        <li key={href} className="nav-item">
           <Link href={href}>
-            <a>{label}</a>
+            <a className="nav-link">{label}</a>
           </Link>
         </li>
       );
@@ -30,6 +30,6 @@ function Header() {
       </div>
     </nav>
   );
-}
+};
 
 export default Header;
