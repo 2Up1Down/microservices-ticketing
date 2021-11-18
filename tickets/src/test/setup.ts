@@ -29,10 +29,12 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-export const getAuthCookie = (): string[] => {
+export const getAuthCookie = (
+  id = new mongoose.Types.ObjectId().toHexString()
+): string[] => {
   // Build a JWT payload. { id, email }
   const payload = {
-    id: "1234567890abc",
+    id,
     email: "test@test.com",
   };
 
