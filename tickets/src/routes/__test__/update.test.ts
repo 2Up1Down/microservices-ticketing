@@ -2,6 +2,8 @@ import request from "supertest";
 import { app } from "../../app";
 import mongoose from "mongoose";
 import { getAuthCookie } from "../../test/setup";
+import { natsWrapper } from "../../nats-wrapper";
+import { Subjects } from "@wsticketing/common";
 
 const validData = {
   title: "this is a valid title",
@@ -98,4 +100,25 @@ it("updates the ticket provided valid inputs", async () => {
 
   expect(updatedTicket.body.title).toEqual(differentValidData.title);
   expect(updatedTicket.body.price).toEqual(differentValidData.price);
+});
+
+it("publishes an event", async () => {
+  const userCookie = getAuthCookie();
+  const createdTicket = await request(app)
+    .post("/api/tickets")
+    .set("Cookie", userCookie)
+    .send(validData);
+
+  await request(app)
+    .put(`/api/tickets/${createdTicket.body.id}`)
+    .set("Cookie", userCookie)
+    .send(differentValidData)
+    .expect(200);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+  expect(natsWrapper.client.publish).toHaveBeenLastCalledWith(
+    Subjects.TicketUpdated,
+    expect.anything(),
+    expect.anything()
+  );
 });
