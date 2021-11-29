@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 
 import { app } from "../../app";
 import { buildOrder, buildTicket, getAuthCookie } from "../../test/setup";
-import { Ticket } from "../../models/ticket";
 import { Order, OrderStatus } from "../../models/order";
 import { natsWrapper } from "../../nats-wrapper";
 
@@ -39,11 +38,7 @@ it("returns an error if the ticket does not exist", async () => {
 });
 
 it("returns an error if the ticket is already reserved", async () => {
-  const ticket = Ticket.build({
-    title: "valid title",
-    price: 20,
-  });
-  await ticket.save();
+  const ticket = await buildTicket();
 
   const order = Order.build({
     ticket,
@@ -63,11 +58,7 @@ it("returns an error if the ticket is already reserved", async () => {
 });
 
 it("Reserves a ticket", async () => {
-  const ticket = Ticket.build({
-    title: "valid title",
-    price: 20,
-  });
-  await ticket.save();
+  const ticket = await buildTicket();
 
   await request(app)
     .post("/api/orders")

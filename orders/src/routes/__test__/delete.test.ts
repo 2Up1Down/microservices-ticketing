@@ -18,7 +18,6 @@ it("returns an error if the order is not found", async () => {
 
 it("returns an error if the order does not belong to the current user", async () => {
   const ticket = await buildTicket();
-
   const userOne = getAuthCookie();
   const { body: order } = await buildOrder(userOne, ticket);
 
@@ -32,7 +31,6 @@ it("returns an error if the order does not belong to the current user", async ()
 
 it("marks an order as cancelled", async () => {
   const ticket = await buildTicket();
-
   const user = getAuthCookie();
   const { body: order } = await buildOrder(user, ticket);
 
