@@ -1,29 +1,7 @@
 import request from "supertest";
-import { app } from "../../app";
-import { Ticket, TicketDoc } from "../../models/ticket";
-import { getAuthCookie } from "../../test/setup";
 import mongoose from "mongoose";
-
-const buildTicket = async () => {
-  const ticket = Ticket.build({
-    title: "abcdefg",
-    price: 123,
-  });
-  await ticket.save();
-
-  return ticket;
-};
-
-const buildOrder = async (userCookie: string[], ticket: TicketDoc) => {
-  const response = await request(app)
-    .post("/api/orders")
-    .set("Cookie", userCookie)
-    .send({
-      ticketId: ticket.id,
-    });
-
-  return response;
-};
+import { app } from "../../app";
+import { buildTicket, buildOrder, getAuthCookie } from "../../test/setup";
 
 it("returns an not found error if the order does not exist", async () => {
   const user = getAuthCookie();
