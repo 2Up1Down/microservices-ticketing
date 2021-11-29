@@ -1,6 +1,10 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import request from "supertest";
+
+import { Ticket, TicketDoc } from "../models/ticket";
+import { app } from "../app";
 
 let mongo: any;
 
@@ -33,7 +37,7 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-export const getAuthCookie = (
+const getAuthCookie = (
   id = new mongoose.Types.ObjectId().toHexString()
 ): string[] => {
   // Build a JWT payload. { id, email }
@@ -57,3 +61,26 @@ export const getAuthCookie = (
   // return a string that's the cookie with the encoded data
   return [`express:sess=${base64}`];
 };
+
+const buildTicket = async () => {
+  const ticket = Ticket.build({
+    title: "abcdefg",
+    price: 123,
+  });
+  await ticket.save();
+
+  return ticket;
+};
+
+const buildOrder = async (userCookie: string[], ticket: TicketDoc) => {
+  const response = await request(app)
+    .post("/api/orders")
+    .set("Cookie", userCookie)
+    .send({
+      ticketId: ticket.id,
+    });
+
+  return response;
+};
+
+export { getAuthCookie, buildTicket, buildOrder };
