@@ -2,6 +2,7 @@ import request from "supertest";
 import { app } from "../../app";
 import { Ticket, TicketDoc } from "../../models/ticket";
 import { getAuthCookie } from "../../test/setup";
+import mongoose from "mongoose";
 
 const buildTicket = async () => {
   const ticket = Ticket.build({
@@ -26,13 +27,13 @@ const buildOrder = async (userCookie: string[], ticket: TicketDoc) => {
 
 it("returns an not found error if the order does not exist", async () => {
   const user = getAuthCookie();
-  const orderId = "some-order-id-tha-does-not-exist";
+  const orderId = new mongoose.Types.ObjectId();
 
   await request(app)
     .get(`/api/orders/${orderId}`)
     .set("Cookie", user)
     .send({})
-    .expect(400);
+    .expect(404);
 });
 
 it("fetches an error if one user tries to fetch another users order", async () => {
