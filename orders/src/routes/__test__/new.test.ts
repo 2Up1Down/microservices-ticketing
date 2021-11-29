@@ -2,9 +2,10 @@ import request from "supertest";
 import mongoose from "mongoose";
 
 import { app } from "../../app";
-import { getAuthCookie } from "../../test/setup";
+import { buildOrder, buildTicket, getAuthCookie } from "../../test/setup";
 import { Ticket } from "../../models/ticket";
 import { Order, OrderStatus } from "../../models/order";
+import { natsWrapper } from "../../nats-wrapper";
 
 it("has a route handler listening to /api/orders for post requests", async () => {
   const response = await request(app).post("/api/orders").send({});
@@ -77,4 +78,10 @@ it("Reserves a ticket", async () => {
     .expect(201);
 });
 
-it.todo("emits an order created event");
+it("emits an order created event", async () => {
+  const ticket = await buildTicket();
+  const user = getAuthCookie();
+  await buildOrder(user, ticket);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});

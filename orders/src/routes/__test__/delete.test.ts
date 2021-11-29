@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { app } from "../../app";
 import { buildOrder, buildTicket, getAuthCookie } from "../../test/setup";
 import { OrderStatus } from "../../models/order";
+import { natsWrapper } from "../../nats-wrapper";
 
 it("returns an error if the order is not found", async () => {
   const user = getAuthCookie();
@@ -45,4 +46,17 @@ it("marks an order as cancelled", async () => {
   expect(updatedOrder.status).toEqual(OrderStatus.Cancelled);
 });
 
-it.todo("emits an order cancelled event");
+it("emits an order cancelled event", async () => {
+  const ticket = await buildTicket();
+  const user = getAuthCookie();
+  const { body: order } = await buildOrder(user, ticket);
+
+  await request(app)
+    .delete(`/api/orders/${order.id}`)
+    .set("Cookie", user)
+    .send({})
+    .expect(200);
+
+  // called 2 times for order:created and order:cancelled
+  expect(natsWrapper.client.publish).toHaveBeenCalledTimes(2);
+});
