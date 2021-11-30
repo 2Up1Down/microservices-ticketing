@@ -11,7 +11,7 @@ const start = async () => {
     throw new Error("MONGO_URI must be defined");
   }
   if (!process.env.NATS_CLUSTER_ID) {
-    throw new Error("ATS_CLUSTER_ID must be defined");
+    throw new Error("NATS_CLUSTER_ID must be defined");
   }
   if (!process.env.NATS_CLIENT_ID) {
     throw new Error("NATS_CLIENT_ID must be defined");
