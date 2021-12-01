@@ -1,6 +1,7 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import { Ticket } from "../models/ticket";
 
 let mongo: any;
 
@@ -56,4 +57,15 @@ export const getAuthCookie = (
 
   // return a string that's the cookie with the encoded data
   return [`express:sess=${base64}`];
+};
+
+export const buildTicket = async () => {
+  const ticket = Ticket.build({
+    title: "abcdefg",
+    price: 123,
+    userId: "123",
+  });
+  await ticket.save();
+
+  return ticket;
 };
