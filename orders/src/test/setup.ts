@@ -64,6 +64,7 @@ const getAuthCookie = (
 
 const buildTicket = async () => {
   const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: "abcdefg",
     price: 123,
   });
