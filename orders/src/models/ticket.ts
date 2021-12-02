@@ -18,6 +18,11 @@ interface TicketDoc extends mongoose.Document {
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+
+  findByEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new mongoose.Schema(
@@ -45,6 +50,10 @@ const ticketSchema = new mongoose.Schema(
 ticketSchema.set("versionKey", "version");
 ticketSchema.plugin(updateIfCurrentPlugin);
 
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+  // new version of an Ticket event is always 1 increment higher than the Ticket version stored in orders service
+  return Ticket.findOne({ _id: event.id, version: event.version - 1 });
+};
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   const { id, ...rest } = attrs;
   return new Ticket({
