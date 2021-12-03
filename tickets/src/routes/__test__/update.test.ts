@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { getAuthCookie } from "../../test/setup";
 import { natsWrapper } from "../../nats-wrapper";
 import { Subjects } from "@wsticketing/common";
+import { Ticket } from "../../models/ticket";
 
 const validData = {
   title: "this is a valid title",
@@ -121,4 +122,24 @@ it("publishes an event", async () => {
     expect.anything(),
     expect.anything()
   );
+});
+
+it("rejects updates if the ticket is reserved", async () => {
+  const userCookie = getAuthCookie();
+  const createdTicket = await request(app)
+    .post("/api/tickets")
+    .set("Cookie", userCookie)
+    .send(validData);
+
+  const ticket = await Ticket.findById(createdTicket.body.id);
+  ticket!.set({
+    orderId: new mongoose.Types.ObjectId().toHexString(),
+  });
+  await ticket!.save();
+
+  await request(app)
+    .put(`/api/tickets/${createdTicket.body.id}`)
+    .set("Cookie", userCookie)
+    .send(differentValidData)
+    .expect(400);
 });
