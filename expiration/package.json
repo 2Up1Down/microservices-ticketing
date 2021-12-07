@@ -19,7 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/bull": "^3.15.6",
-    "@wsticketing/common": "^1.0.16",
+    "@wsticketing/common": "^1.0.17",
     "bull": "^4.1.1",
     "node-nats-streaming": "^0.3.2",
     "ts-node-dev": "^1.1.8",
