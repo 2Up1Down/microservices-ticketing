@@ -5,17 +5,23 @@ import { getAuthCookie } from "../../test/setup";
 import mongoose from "mongoose";
 import { OrderStatus } from "@wsticketing/common";
 
-const buildOrder = async (orderId?: string, userId?: string) => {
+interface BuildOrderOptions {
+  orderId?: string | undefined;
+  userId?: string | undefined;
+}
+
+const buildOrder = async (options?: BuildOrderOptions) => {
   const order = Order.build({
-    id: orderId || new mongoose.Types.ObjectId().toHexString(),
+    id: options?.orderId || new mongoose.Types.ObjectId().toHexString(),
     price: 999,
     status: OrderStatus.Created,
-    userId: userId || new mongoose.Types.ObjectId().toHexString(),
+    userId: options?.userId || new mongoose.Types.ObjectId().toHexString(),
     version: 0,
   });
   await order.save();
   return order;
 };
+
 it("returns a 404 when purchasing an order that does not exist", async () => {
   await request(app)
     .post("/api/payments")
@@ -43,13 +49,8 @@ it("returns a 401 when purchasing an order that does not belong to the user", as
 it("returns a 400 when purchasing a cancelled order", async () => {
   const userId = new mongoose.Types.ObjectId().toHexString();
 
-  const order = Order.build({
-    id: new mongoose.Types.ObjectId().toHexString(),
-    price: 999,
-    status: OrderStatus.Cancelled,
-    userId,
-    version: 0,
-  });
+  const order = await buildOrder({ userId });
+  order.set({ status: OrderStatus.Cancelled });
   await order.save();
 
   await request(app)
