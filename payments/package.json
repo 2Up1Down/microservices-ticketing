@@ -10,6 +10,9 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
+    "setupFiles": [
+      "dotenv/config"
+    ],
     "setupFilesAfterEnv": [
       "./src/test/setup.ts"
     ]
@@ -40,6 +43,7 @@
     "jest": "^27.3.1",
     "mongodb-memory-server": "^8.0.2",
     "supertest": "^6.1.6",
-    "ts-jest": "^27.0.7"
+    "ts-jest": "^27.0.7",
+    "dotenv": "^10.0.0"
   }
 }
