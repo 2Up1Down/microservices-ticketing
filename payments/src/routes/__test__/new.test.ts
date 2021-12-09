@@ -68,7 +68,7 @@ it("returns a 400 when purchasing a cancelled order", async () => {
     .expect(400);
 });
 
-it("returns a 204 with valid inputs and mock stripe API", async () => {
+it("returns a 201 with valid inputs and mock stripe API", async () => {
   const userId = new mongoose.Types.ObjectId().toHexString();
   const order = await buildOrder({ userId });
 
@@ -91,4 +91,24 @@ it("returns a 204 with valid inputs and mock stripe API", async () => {
   });
 
   expect(payment).not.toBeNull();
+});
+
+it("returns a 201 with the payment id", async () => {
+  const userId = new mongoose.Types.ObjectId().toHexString();
+  const order = await buildOrder({ userId });
+
+  const response = await request(app)
+    .post("/api/payments")
+    .set("Cookie", getAuthCookie(userId))
+    .send({
+      token: "tok_visa",
+      orderId: order.id,
+    })
+    .expect(201);
+
+  const payment = await Payment.findOne({
+    orderId: order.id,
+  });
+
+  expect(payment!.id).toEqual(response.body.id);
 });
