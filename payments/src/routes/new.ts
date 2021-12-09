@@ -43,11 +43,15 @@ router.post(
       throw new BadRequestError("Cannot pay for a cancelled order");
     }
 
+    console.log("before strip payment");
+
     await stripe.charges.create({
       currency: "chf",
       amount: order.price * 100,
       source: token,
     });
+
+    console.log("after strip payment");
 
     res.status(201).send({ success: true });
   }
