@@ -22,7 +22,7 @@ const TicketDetailPage = ({ currentUser, ticket }) => {
       <h1>{ticket.title}</h1>
       <h4>{ticket.price}</h4>
       <Error errors={errors} />
-      <button className="btn btn-primary" onClick={doRequest}>
+      <button className="btn btn-primary" onClick={() => doRequest()}>
         Purchase
       </button>
     </BaseLayout>
