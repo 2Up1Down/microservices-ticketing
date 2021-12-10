@@ -3,7 +3,8 @@ import Link from "next/link";
 
 const Header = ({ user }) => {
   const links = [
-    user && { label: "new Ticket", href: "/tickets/new" },
+    user && { label: "Sell Tickets", href: "/tickets/new" },
+    user && { label: "My Orders", href: "/orders" },
     !user && { label: "Sign Up", href: "/auth/signup" },
     !user && { label: "Sign In", href: "/auth/signin" },
     user && { label: "Sign Out", href: "/auth/signout" },
