@@ -3,6 +3,7 @@ import BaseLayout from "../../components/common/base-layout";
 import getCurrentUser from "../../lib/auth";
 import useRequest from "../../hooks/use-request";
 import Error from "../../components/common/error";
+import Router from "next/router";
 
 const NewTicketPage = ({ currentUser }) => {
   const [title, setTitle] = useState("");
@@ -14,7 +15,7 @@ const NewTicketPage = ({ currentUser }) => {
       title,
       price,
     },
-    onSuccess: (ticket) => console.log(ticket),
+    onSuccess: () => Router.push("/"),
   });
 
   const onBlur = () => {
