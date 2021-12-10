@@ -10,9 +10,10 @@ const getCurrentUser = async (headers) => {
       }
     );
 
-    return data;
+    const { currentUser } = data;
+    return currentUser;
   } catch (error) {
-    return { currentUser: "null" };
+    return null;
   }
 };
 
