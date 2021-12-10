@@ -67,7 +67,7 @@ export async function getServerSideProps({ req }) {
   const currentUser = await getCurrentUser(req.headers);
 
   return {
-    props: currentUser,
+    props: { currentUser },
   };
 }
 
