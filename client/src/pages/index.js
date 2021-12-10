@@ -7,7 +7,7 @@ const LandingPage = ({ currentUser }) => {
   return (
     <BaseLayout user={currentUser}>
       <h1>Landing Page</h1>
-      {currentUser ? "You are signed in" : "You are NOT signed in"}
+      {currentUser ? "You are signed in as: " : "You are NOT signed in"}
       {currentUser && currentUser.email}
     </BaseLayout>
   );
