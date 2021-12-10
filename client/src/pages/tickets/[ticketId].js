@@ -4,15 +4,17 @@ import BaseLayout from "../../components/common/base-layout";
 import { getTicketById } from "../../lib/tickets";
 import useRequest from "../../hooks/use-request";
 import Error from "../../components/common/error";
+import { useRouter } from "next/router";
 
 const TicketDetailPage = ({ currentUser, ticket }) => {
+  const router = useRouter();
   const { doRequest, errors } = useRequest({
     url: "/api/orders/",
     method: "post",
     body: {
       ticketId: ticket.id,
     },
-    onSuccess: (order) => console.log(order),
+    onSuccess: (order) => router.push(`/orders/${order.id}`),
   });
 
   return (
@@ -28,8 +30,8 @@ const TicketDetailPage = ({ currentUser, ticket }) => {
 };
 
 export async function getServerSideProps({ query, req }) {
-  const currentUser = await getCurrentUser(req.headers);
   const { ticketId } = query;
+  const currentUser = await getCurrentUser(req.headers);
 
   const ticket = await getTicketById(req.headers, ticketId);
 
