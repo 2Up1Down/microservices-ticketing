@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import getCurrentUser from "../lib/auth";
 import BaseLayout from "../components/common/base-layout";
 import getAllTickets from "../lib/tickets";
@@ -8,6 +10,11 @@ const LandingPage = ({ currentUser, tickets = [] }) => {
       <tr key={ticket.id}>
         <td>{ticket.title}</td>
         <td>{ticket.price}</td>
+        <td>
+          <Link href={`/tickets/${ticket.id}`}>
+            <a href="">Details</a>
+          </Link>
+        </td>
       </tr>
     );
   });
@@ -26,6 +33,7 @@ const LandingPage = ({ currentUser, tickets = [] }) => {
             <tr>
               <th>Title</th>
               <th>Price</th>
+              <th>Link</th>
             </tr>
           </thead>
           <tbody>{ticketList}</tbody>
