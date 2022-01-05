@@ -23,7 +23,7 @@ jobs:
         run: cd auth && docker build -t $REPOSITORY .
 
       - name: Log in to docker hub
-        run: docker login -u $DOCKER_USERNAME -P $DOCKER_PASSWORD
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
       - name: Push to docker hub
         run: docker push $REPOSITORY
