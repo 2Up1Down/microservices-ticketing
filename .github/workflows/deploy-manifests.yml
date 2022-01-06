@@ -1,0 +1,32 @@
+name: deploy-manifests
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'infra/**'
+
+env:
+  DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+  DIGITALOCEAN_CLUSTER_ID: ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
+  DEPLOYMENT_NAME: auth-depl
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Authenticate to DigitalOcean and install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: $DIGITALOCEAN_ACCESS_TOKEN
+
+      - name: Get connection credentials for DigitalOcean cluster
+        run: doctl kubernetes cluster kubeconfig save $DIGITALOCEAN_CLUSTER_ID
+
+      - name: Apply config files to cluster
+        run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
+
