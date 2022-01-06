@@ -1,6 +1,11 @@
 name: some test to find out why the workflow is not running
 
 
-on:
-  pull_request:
-    
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd auth && install && npm run test:ci
