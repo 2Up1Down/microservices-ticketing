@@ -1,4 +1,4 @@
-name: deploy-tickets
+name: deploy-orders
 
 on:
   push:
@@ -6,12 +6,12 @@ on:
       - master
       - dev
     paths:
-      - 'tickets/**'
+      - 'orders/**'
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  REPOSITORY: 2up1down/tickets
+  REPOSITORY: 2up1down/orders
 
 jobs:
   build:
