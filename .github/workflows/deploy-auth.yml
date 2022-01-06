@@ -1,11 +1,6 @@
 name: deploy-auth
 
 on:
-  push:
-    branches:
-      - dev
-    paths:
-      - 'auth/**'
   pull_request:
     branches:
       - master
