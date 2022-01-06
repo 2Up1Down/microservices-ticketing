@@ -34,9 +34,9 @@ jobs:
       - name: Authenticate to DigitalOcean and install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: $DIGITALOCEAN_ACCESS_TOKEN
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Get connection credentials for DigitalOcean cluster
+      - name: Get connection credentials for DigitalOcean cluster (Save DigitalOcean kubeconfig)
         run: doctl kubernetes cluster kubeconfig save $DIGITALOCEAN_CLUSTER_ID
 
       - name: Reach into cluster and restart deployment itself
