@@ -1,0 +1,44 @@
+name: deploy-tickets
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'tickets/**'
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+  DIGITALOCEAN_CLUSTER_ID: ${{ secrets.DIGITALOCEAN_CLUSTER_ID }}
+  REPOSITORY: 2up1down/tickets
+  DEPLOYMENT_NAME: tickets-depl
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build docker image
+        run: cd tickets && docker build -t $REPOSITORY .
+
+      - name: Log in to docker hub
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Push to docker hub
+        run: docker push $REPOSITORY
+
+      - name: Authenticate to DigitalOcean and install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ env.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Get connection credentials for DigitalOcean cluster (Save DigitalOcean kubeconfig)
+        run: doctl kubernetes cluster kubeconfig save $DIGITALOCEAN_CLUSTER_ID
+
+      - name: Reach into cluster and restart deployment itself
+        run: kubectl rollout restart deployment $DEPLOYMENT_NAME
+
