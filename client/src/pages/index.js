@@ -21,7 +21,7 @@ const LandingPage = ({ currentUser, tickets = [] }) => {
 
   return (
     <BaseLayout user={currentUser}>
-      <h1>Landing Page</h1>
+      <h1>Tickets</h1>
       <div>
         {currentUser ? "You are signed in as: " : "You are NOT signed in"}
         {currentUser && currentUser.email}
