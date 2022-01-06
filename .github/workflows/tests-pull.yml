@@ -1,5 +1,4 @@
-name: some test to find out why the workflow is not running
-
+name: test on pull_request
 
 on: pull_request
 
