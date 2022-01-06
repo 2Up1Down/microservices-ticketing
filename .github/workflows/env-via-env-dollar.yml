@@ -1,4 +1,4 @@
-name: Variable without curly braces
+name: Variable with double curly braces via env
 on:
   pull_request:
     branches:
