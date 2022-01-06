@@ -1,4 +1,4 @@
-name: Variable with ${ VARIABLE }
+name: Variable with single curly braces
 
 on:
   pull_request:
