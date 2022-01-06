@@ -21,4 +21,4 @@ jobs:
       - name: Authenticate to DigitalOcean and install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: $DO_ACCESS_TOKEN
+          token: ${{ DO_ACCESS_TOKEN }}
