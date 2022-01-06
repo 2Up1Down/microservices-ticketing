@@ -1,0 +1,21 @@
+name: Authenticate to DigitalOcean with token via env variable in brackets
+
+on:
+  pull_request:
+    branches:
+      - master
+
+env:
+  DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Authenticate to DigitalOcean and install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${DIGITALOCEAN_ACCESS_TOKEN}
