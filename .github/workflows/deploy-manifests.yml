@@ -28,5 +28,5 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save $DIGITALOCEAN_CLUSTER_ID
 
       - name: Apply config files to cluster
-        run: kubectl apply -f infra/k8s
+        run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
 
