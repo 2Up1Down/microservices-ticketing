@@ -1,5 +1,4 @@
-name: Authenticate to DigitalOcean with token via env variable
-
+name: Variable with $VARIABLE
 on:
   pull_request:
     branches:
@@ -7,11 +6,15 @@ on:
 
 env:
   DIGITALOCEAN_ACCESS_TOKEN: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+  MY_NAME: Mona
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Print out my name
+        run: echo "My name is $MY_NAME"
+
       - name: Checkout
         uses: actions/checkout@v2
 
