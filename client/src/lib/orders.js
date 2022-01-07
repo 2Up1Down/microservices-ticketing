@@ -2,13 +2,10 @@ import axios from "axios";
 
 export const getAllOrders = async (headers) => {
   try {
-    const { data } = await axios.get(
-      "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/orders",
-      {
-        withCredentials: true,
-        headers: headers,
-      }
-    );
+    const { data } = await axios.get("http://www.spotz.ch/api/orders", {
+      withCredentials: true,
+      headers: headers,
+    });
 
     return data;
   } catch (error) {
@@ -19,7 +16,7 @@ export const getAllOrders = async (headers) => {
 export const getOrderById = async (headers, orderId) => {
   try {
     const { data } = await axios.get(
-      `http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/orders/${orderId}`,
+      `http://www.spotz.ch/api/orders/${orderId}`,
       {
         withCredentials: true,
         headers: headers,
